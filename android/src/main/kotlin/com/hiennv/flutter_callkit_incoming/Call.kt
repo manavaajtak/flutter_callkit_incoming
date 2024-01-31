@@ -21,6 +21,14 @@ data class Data(val args: Map<String, Any?>) {
     var handle: String = (args["handle"] as? String) ?: ""
     @JsonProperty("avatar")
     var avatar: String = (args["avatar"] as? String) ?: ""
+    @JsonProperty("appLogo")
+    var appLogo: String = (args["appLogo"] as? String) ?: ""
+    @JsonProperty("subText")
+    var subText: String = (args["subText"] as? String) ?: ""
+    @JsonProperty("declineIcon")
+    var declineIcon: String = (args["declineIcon"] as? String) ?: ""
+    @JsonProperty("acceptIcon")
+    var acceptIcon: String = (args["acceptIcon"] as? String) ?: ""
     @JsonProperty("type")
     var type: Int = (args["type"] as? Int) ?: 0
     @JsonProperty("duration")
@@ -135,6 +143,10 @@ data class Data(val args: Map<String, Any?>) {
         bundle.putString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER, nameCaller)
         bundle.putString(CallkitConstants.EXTRA_CALLKIT_HANDLE, handle)
         bundle.putString(CallkitConstants.EXTRA_CALLKIT_AVATAR, avatar)
+        bundle.putString(CallkitConstants.EXTRA_CALLKIT_APP_LOGO, appLogo)
+        bundle.putString(CallkitConstants.EXTRA_CALLKIT_SUB_TEXT, subText)
+        bundle.putString(CallkitConstants.EXTRA_CALLKIT_ACCEPT_ICON_URL, acceptIcon)
+        bundle.putString(CallkitConstants.EXTRA_CALLKIT_DECLINE_ICON_URL, declineIcon)
         bundle.putInt(CallkitConstants.EXTRA_CALLKIT_TYPE, type)
         bundle.putLong(CallkitConstants.EXTRA_CALLKIT_DURATION, duration)
         bundle.putString(CallkitConstants.EXTRA_CALLKIT_TEXT_ACCEPT, textAccept)
@@ -222,6 +234,14 @@ data class Data(val args: Map<String, Any?>) {
                 bundle.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
             data.avatar =
                 bundle.getString(CallkitConstants.EXTRA_CALLKIT_AVATAR, "")
+            data.appLogo =
+                    bundle.getString(CallkitConstants.EXTRA_CALLKIT_APP_LOGO, "")
+            data.avatar =
+                    bundle.getString(CallkitConstants.EXTRA_CALLKIT_SUB_TEXT, "")
+            data.acceptIcon =
+                    bundle.getString(CallkitConstants.EXTRA_CALLKIT_ACCEPT_ICON_URL, "")
+            data.declineIcon =
+                    bundle.getString(CallkitConstants.EXTRA_CALLKIT_DECLINE_ICON_URL, "")
             data.type = bundle.getInt(CallkitConstants.EXTRA_CALLKIT_TYPE, 0)
             data.duration =
                 bundle.getLong(CallkitConstants.EXTRA_CALLKIT_DURATION, 30000L)

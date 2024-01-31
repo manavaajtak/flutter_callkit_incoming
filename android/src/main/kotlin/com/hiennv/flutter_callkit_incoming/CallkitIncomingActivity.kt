@@ -30,6 +30,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.os.PowerManager
 import android.text.TextUtils
 import android.util.Log
+import java.util.logging.Logger
 
 
 class CallkitIncomingActivity : Activity() {
@@ -71,7 +72,9 @@ class CallkitIncomingActivity : Activity() {
     private lateinit var llBackgroundAnimation: RippleRelativeLayout
 
     private lateinit var tvNameCaller: TextView
+    private lateinit var subTextView: TextView
     private lateinit var tvNumber: TextView
+    private lateinit var topHeader: TextView
     private lateinit var ivLogo: ImageView
     private lateinit var ivAvatar: CircleImageView
 
@@ -101,7 +104,8 @@ class CallkitIncomingActivity : Activity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
         }
         transparentStatusAndNavigation()
-        setContentView(R.layout.activity_callkit_incoming)
+//        setContentView(R.layout.activity_callkit_incoming)
+        setContentView(R.layout.activity_callkit_incoming_v2)
         initView()
         incomingData(intent)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -169,7 +173,15 @@ class CallkitIncomingActivity : Activity() {
 		val textColor = data?.getString(CallkitConstants.EXTRA_CALLKIT_TEXT_COLOR, "#ffffff")
         val isShowCallID = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_CALL_ID, false)
         tvNameCaller.text = data?.getString(CallkitConstants.EXTRA_CALLKIT_NAME_CALLER, "")
+        topHeader.text = "Incoming chat request from"
         tvNumber.text = data?.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
+
+        val subText = data?.getString(CallkitConstants.EXTRA_CALLKIT_SUB_TEXT, "")
+        if (subText!=null && subText.isNotEmpty()) {
+            subTextView.text = subText
+            subTextView.visibility = View.VISIBLE
+        }
+
         tvNumber.visibility = if (isShowCallID == true) View.VISIBLE else View.INVISIBLE
 
 		try {
@@ -179,6 +191,18 @@ class CallkitIncomingActivity : Activity() {
 		}
 
         val isShowLogo = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_LOGO, false)
+        var appLogo = data?.getString(CallkitConstants.EXTRA_CALLKIT_APP_LOGO, "")
+        if (appLogo != null && appLogo.isNotEmpty()) {
+            if (!appLogo.startsWith("http://", true) && !appLogo.startsWith("https://", true)){
+                appLogo = String.format("file:///android_asset/flutter_assets/%s", appLogo)
+            }
+            val headers = data?.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
+            getPicassoInstance(this@CallkitIncomingActivity, headers)
+                    .load(appLogo)
+                    .placeholder(R.drawable.transparent)
+                    .error(R.drawable.transparent)
+                    .into(ivLogo)
+        }
         ivLogo.visibility = if (isShowLogo == true) View.VISIBLE else View.INVISIBLE
 
         val avatarUrl = data?.getString(CallkitConstants.EXTRA_CALLKIT_AVATAR, "")
@@ -229,6 +253,32 @@ class CallkitIncomingActivity : Activity() {
                     .error(R.drawable.transparent)
                     .into(ivBackground)
         }
+
+        var acceptIconUrl = data?.getString(CallkitConstants.EXTRA_CALLKIT_ACCEPT_ICON_URL, "")
+        if (acceptIconUrl != null && acceptIconUrl.isNotEmpty()) {
+            if (!acceptIconUrl.startsWith("http://", true) && !acceptIconUrl.startsWith("https://", true)){
+                acceptIconUrl = String.format("file:///android_asset/flutter_assets/%s", acceptIconUrl)
+            }
+            val headers = data?.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
+            getPicassoInstance(this@CallkitIncomingActivity, headers)
+                    .load(acceptIconUrl)
+                    .placeholder(R.drawable.transparent)
+                    .error(R.drawable.transparent)
+                    .into(ivAcceptCall)
+        }
+
+        var declineCallUrl = data?.getString(CallkitConstants.EXTRA_CALLKIT_DECLINE_ICON_URL, "")
+        if (declineCallUrl != null && declineCallUrl.isNotEmpty()) {
+            if (!declineCallUrl.startsWith("http://", true) && !declineCallUrl.startsWith("https://", true)){
+                declineCallUrl = String.format("file:///android_asset/flutter_assets/%s", declineCallUrl)
+            }
+            val headers = data?.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
+            getPicassoInstance(this@CallkitIncomingActivity, headers)
+                    .load(declineCallUrl)
+                    .placeholder(R.drawable.transparent)
+                    .error(R.drawable.transparent)
+                    .into(ivDeclineCall)
+        }
     }
 
     private fun finishTimeout(data: Bundle?, duration: Long) {
@@ -247,13 +297,15 @@ class CallkitIncomingActivity : Activity() {
 
     private fun initView() {
         ivBackground = findViewById(R.id.ivBackground)
-        llBackgroundAnimation = findViewById(R.id.llBackgroundAnimation)
-        llBackgroundAnimation.layoutParams.height =
-                Utils.getScreenWidth() + Utils.getStatusBarHeight(this@CallkitIncomingActivity)
-        llBackgroundAnimation.startRippleAnimation()
+//        llBackgroundAnimation = findViewById(R.id.llBackgroundAnimation)
+//        llBackgroundAnimation.layoutParams.height =
+//                Utils.getScreenWidth() + Utils.getStatusBarHeight(this@CallkitIncomingActivity)
+//        llBackgroundAnimation.startRippleAnimation()
 
         tvNameCaller = findViewById(R.id.tvNameCaller)
         tvNumber = findViewById(R.id.tvNumber)
+        subTextView = findViewById(R.id.subText)
+        topHeader = findViewById(R.id.topHeader)
         ivLogo = findViewById(R.id.ivLogo)
         ivAvatar = findViewById(R.id.ivAvatar)
 

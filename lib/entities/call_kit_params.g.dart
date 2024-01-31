@@ -22,14 +22,18 @@ CallKitParams _$CallKitParamsFromJson(Map<String, dynamic> json) =>
           ? null
           : NotificationParams.fromJson(
               json['missedCallNotification'] as Map<String, dynamic>),
+      acceptIcon: json['acceptIcon'] as String?,
+      declineIcon: json['declineIcon'] as String?,
       extra: json['extra'] as Map<String, dynamic>?,
       headers: json['headers'] as Map<String, dynamic>?,
+      subText: json['subText'] as String?,
       android: json['android'] == null
           ? null
           : AndroidParams.fromJson(json['android'] as Map<String, dynamic>),
       ios: json['ios'] == null
           ? null
           : IOSParams.fromJson(json['ios'] as Map<String, dynamic>),
+      appLogo: json['appLogo'] as String?,
     );
 
 Map<String, dynamic> _$CallKitParamsToJson(CallKitParams instance) =>
@@ -38,12 +42,16 @@ Map<String, dynamic> _$CallKitParamsToJson(CallKitParams instance) =>
       'nameCaller': instance.nameCaller,
       'appName': instance.appName,
       'avatar': instance.avatar,
+      'declineIcon': instance.declineIcon,
+      'acceptIcon': instance.acceptIcon,
+      'appLogo': instance.appLogo,
       'handle': instance.handle,
       'type': instance.type,
       'normalHandle': instance.normalHandle,
       'duration': instance.duration,
       'textAccept': instance.textAccept,
       'textDecline': instance.textDecline,
+      'subText': instance.subText,
       'missedCallNotification': instance.missedCallNotification?.toJson(),
       'extra': instance.extra,
       'headers': instance.headers,
