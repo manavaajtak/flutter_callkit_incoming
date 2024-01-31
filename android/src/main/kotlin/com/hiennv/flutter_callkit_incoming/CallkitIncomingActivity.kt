@@ -205,10 +205,13 @@ class CallkitIncomingActivity : Activity() {
         }
         ivLogo.visibility = if (isShowLogo == true) View.VISIBLE else View.INVISIBLE
 
-        val avatarUrl = data?.getString(CallkitConstants.EXTRA_CALLKIT_AVATAR, "")
+        var avatarUrl = data?.getString(CallkitConstants.EXTRA_CALLKIT_AVATAR, "")
         if (avatarUrl != null && avatarUrl.isNotEmpty()) {
             ivAvatar.visibility = View.VISIBLE
-            val headers = data.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
+            if (!avatarUrl.startsWith("http://", true) && !avatarUrl.startsWith("https://", true)){
+                avatarUrl = String.format("file:///android_asset/flutter_assets/%s", avatarUrl)
+            }
+            val headers = data?.getSerializable(CallkitConstants.EXTRA_CALLKIT_HEADERS) as HashMap<String, Any?>
             getPicassoInstance(this@CallkitIncomingActivity, headers)
                     .load(avatarUrl)
                     .placeholder(R.drawable.ic_default_avatar)
