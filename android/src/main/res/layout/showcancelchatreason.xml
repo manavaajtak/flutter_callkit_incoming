@@ -38,7 +38,7 @@
 
 
         <RadioButton
-
+            android:buttonTint="#000000"
             android:background="?android:selectableItemBackground"
             android:id="@+id/radio_not_interested"
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:background="#efefef"/>
         <RadioButton
 
-
+            android:buttonTint="#000000"
             android:background="?android:selectableItemBackground"
 
             android:id="@+id/radio_call_instead"
@@ -67,7 +67,7 @@
             android:layout_height="1dp"
             android:background="#efefef"/>
         <RadioButton
-
+            android:buttonTint="#000000"
 
             android:background="?android:selectableItemBackground"
 
@@ -83,7 +83,7 @@
             android:layout_height="1dp"
             android:background="#efefef"/>
         <RadioButton
-
+            android:buttonTint="#000000"
             android:id="@+id/radio_call_new"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
             android:layout_height="1dp"
             android:background="#efefef"/>
         <RadioButton
-
+            android:buttonTint="#000000"
             android:background="?android:selectableItemBackground"
             android:textSize="14sp"
             android:id="@+id/radio_call_now"
@@ -106,7 +106,7 @@
          />
         <!-- ...other radio buttons... -->
     </RadioGroup>
-
+    
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
