@@ -1,10 +1,10 @@
 package com.hiennv.flutter_callkit_incoming
-
+import android.app.AlertDialog;
 import android.app.Activity
-import android.app.ActivityManager
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
@@ -13,25 +13,28 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import com.hiennv.flutter_callkit_incoming.widgets.RippleRelativeLayout
-import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
-import kotlin.math.abs
-import okhttp3.OkHttpClient
-import com.squareup.picasso.OkHttp3Downloader
-import android.view.ViewGroup.MarginLayoutParams
 import android.os.PowerManager
 import android.text.TextUtils
 import android.util.Log
-import java.util.logging.Logger
-
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
+import android.view.Window
+import android.view.WindowManager
+import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.TextView
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.hiennv.flutter_callkit_incoming.widgets.RippleRelativeLayout
+import com.squareup.picasso.OkHttp3Downloader
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
+import okhttp3.OkHttpClient
+import kotlin.math.abs
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class CallkitIncomingActivity : Activity() {
 
@@ -104,7 +107,7 @@ class CallkitIncomingActivity : Activity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
         }
         transparentStatusAndNavigation()
-//        setContentView(R.layout.activity_callkit_incoming)
+
         setContentView(R.layout.activity_callkit_incoming_v2)
         initView()
         incomingData(intent)
@@ -300,10 +303,6 @@ class CallkitIncomingActivity : Activity() {
 
     private fun initView() {
         ivBackground = findViewById(R.id.ivBackground)
-//        llBackgroundAnimation = findViewById(R.id.llBackgroundAnimation)
-//        llBackgroundAnimation.layoutParams.height =
-//                Utils.getScreenWidth() + Utils.getStatusBarHeight(this@CallkitIncomingActivity)
-//        llBackgroundAnimation.startRippleAnimation()
 
         tvNameCaller = findViewById(R.id.tvNameCaller)
         tvNumber = findViewById(R.id.tvNumber)
@@ -343,7 +342,6 @@ class CallkitIncomingActivity : Activity() {
         val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA)
         val acceptIntent = TransparentActivity.getIntent(this, CallkitConstants.ACTION_CALL_ACCEPT, data)
         startActivity(acceptIntent)
-
         dismissKeyguard()
         finish()
     }
@@ -356,10 +354,60 @@ class CallkitIncomingActivity : Activity() {
     }
 
     private fun onDeclineClick() {
-        val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA)
-        val intent = CallkitIncomingBroadcastReceiver.getIntentDecline(this@CallkitIncomingActivity, data)
-        sendBroadcast(intent)
-        finishTask()
+
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.showcancelchatreason, null)
+        val bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialog.setContentView(dialogView)
+
+//        val dialog: AlertDialog = AlertDialog.Builder(this)
+//                .setView(dialogView)
+//                .create()
+
+ // Assign your animation style here
+        val radioButton1 = dialogView.findViewById<RadioButton>(R.id.radio_not_interested)
+        val radioButton2 = dialogView.findViewById<RadioButton>(R.id.radio_call_instead)
+        val radioButton3 = dialogView.findViewById<RadioButton>(R.id.radio_call_now)
+        val radioButton4 = dialogView.findViewById<RadioButton>(R.id.radio_call_astrologer)
+        val radioButton5 = dialogView.findViewById<RadioButton>(R.id.radio_call_new)
+
+        val textView = dialogView.findViewById<TextView>(R.id.text_view_error)
+        val dontCancel = dialogView.findViewById<Button>(R.id.btn_dont_cancel)
+        val cancelRequest = dialogView.findViewById<Button>(R.id.btn_cancel_request)
+        val radioButtons = arrayOf(radioButton1, radioButton2, radioButton3, radioButton4, radioButton5)
+
+
+        dontCancel.setOnClickListener {
+
+            bottomSheetDialog.dismiss()
+        }
+
+        cancelRequest.setOnClickListener {
+            var isAnyRadioButtonSelected = false
+
+            for (radioButton in radioButtons) {
+                if (radioButton.isChecked) {
+                    // At least one radio button is selected
+                    isAnyRadioButtonSelected = true
+                    break  // Exit loop since we found one selected
+                }
+            }
+            if(!isAnyRadioButtonSelected){
+                textView.visibility=TextView.VISIBLE
+            }
+            else{
+                val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA)
+                data?.putString(CallkitConstants.EXTRA_REASON_CALL_END_ACTION,radioButton1.text.toString());
+                val intent = CallkitIncomingBroadcastReceiver.getIntentDecline(this@CallkitIncomingActivity, data)
+                sendBroadcast(intent)
+                finishTask()
+                bottomSheetDialog.dismiss()
+            }
+
+        }
+        textView.visibility=TextView.INVISIBLE
+//        dialog.show()
+        bottomSheetDialog.show()
+
     }
 
     private fun finishDelayed() {
