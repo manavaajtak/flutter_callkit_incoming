@@ -202,8 +202,8 @@ class CallkitNotificationManager(private val context: Context) {
         val isShowCallID = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_CALL_ID, false)
         if (isShowCallID == true) {
             remoteViews.setTextViewText(
-                R.id.tvNumber,
-                data.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
+                    R.id.tvNumber,
+                    data.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
             )
         }
         remoteViews.setOnClickPendingIntent(
@@ -285,8 +285,8 @@ class CallkitNotificationManager(private val context: Context) {
             val isShowCallID = data?.getBoolean(CallkitConstants.EXTRA_CALLKIT_IS_SHOW_CALL_ID, false)
             if (isShowCallID == true) {
                 notificationViews?.setTextViewText(
-                    R.id.tvNumber,
-                    data.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
+                        R.id.tvNumber,
+                        data.getString(CallkitConstants.EXTRA_CALLKIT_HANDLE, "")
                 )
             }
             notificationViews?.setOnClickPendingIntent(
@@ -582,5 +582,4 @@ class CallkitNotificationManager(private val context: Context) {
 
 
 }
-
 
