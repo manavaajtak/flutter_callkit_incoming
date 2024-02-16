@@ -90,6 +90,7 @@ class CallkitIncomingActivity : Activity() {
 
     private lateinit var ivDeclineCall: ImageView
     private lateinit var tvDecline: TextView
+    private lateinit var llDeclineCall :ImageView
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -329,9 +330,13 @@ class CallkitIncomingActivity : Activity() {
         ivAcceptCall.setOnClickListener {
             onAcceptClick()
         }
+
+
         ivDeclineCall.setOnClickListener {
-            onDeclineClick()
+          onDeclineClick()
         }
+
+
     }
 
     private fun animateAcceptCall() {
@@ -359,24 +364,18 @@ class CallkitIncomingActivity : Activity() {
 
     private fun onDeclineClick() {
         val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA)
-        val declineReasonList = data?.getStringArrayList(CallkitConstants.EXTRA_DECLINE_REASON_CALL_END)
 
+        val declineReasonList = data?.getStringArrayList(CallkitConstants.EXTRA_DECLINE_REASON_CALL_END)
         val dialogView = LayoutInflater.from(this).inflate(R.layout.showcancelchatreason, null)
+
         val bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialog.setContentView(dialogView)
-
-
         val textView = dialogView.findViewById<TextView>(R.id.text_view_error)
         val dontCancel = dialogView.findViewById<Button>(R.id.btn_dont_cancel)
         val cancelRequest = dialogView.findViewById<Button>(R.id.btn_cancel_request)
         Log.d("declinereason", declineReasonList.toString());
-
         val relativeLayout = dialogView.findViewById<RelativeLayout>(R.id.radio_relative_layout)
-
-
-//        val radioButtons = arrayOf(radioButton1, radioButton2, radioButton3, radioButton4, radioButton5)
         val radioGroup =  RadioGroup(this)
-
         if (declineReasonList != null) {
             for (i in declineReasonList ){
                 val radioButton = RadioButton(this)
@@ -393,6 +392,7 @@ class CallkitIncomingActivity : Activity() {
             }
         }
         relativeLayout.addView(radioGroup);
+
 
         dontCancel.setOnClickListener {
             bottomSheetDialog.dismiss()

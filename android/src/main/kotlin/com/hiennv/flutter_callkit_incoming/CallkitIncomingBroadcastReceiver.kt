@@ -76,11 +76,14 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
     }
 
 
+
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
         val callkitNotificationManager = CallkitNotificationManager(context)
         val action = intent.action ?: return
         val data = intent.extras?.getBundle(CallkitConstants.EXTRA_CALLKIT_INCOMING_DATA) ?: return
+       
+
         when (action) {
             "${context.packageName}.${CallkitConstants.ACTION_CALL_INCOMING}" -> {
                 try {
@@ -125,6 +128,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                     callkitNotificationManager.clearIncomingNotification(data, false)
                     removeCall(context, Data.fromBundle(data))
                 } catch (error: Exception) {
+                    Log.d(TAG, "declined", error)
                     Log.e(TAG, null, error)
                 }
             }
@@ -136,6 +140,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                     callkitNotificationManager.clearIncomingNotification(data, false)
                     removeCall(context, Data.fromBundle(data))
                 } catch (error: Exception) {
+                    Log.d(TAG, "declined", error)
                     Log.e(TAG, null, error)
                 }
             }
@@ -190,7 +195,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                         CallkitConstants.EXTRA_CALLKIT_MISSED_CALL_NOTIFICATION_CHANNEL_NAME,
                         ""
                 ),
-               "callEndReason" to data.getString(CallkitConstants.EXTRA_REASON_CALL_END_ACTION)
+               "callEndReason" to data.getString(CallkitConstants.EXTRA_REASON_CALL_END_ACTION,"")
         )
         val notification = mapOf(
                 "id" to data.getInt(CallkitConstants.EXTRA_CALLKIT_MISSED_CALL_ID),
